@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Ambulance Bookings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #8B0000;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      background: #8B0000;
+      color: #fff;
+      position: sticky;
+      top: 0;
+    }
+    select, button {
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #8B0000;
+    }
+    button {
+      background: #8B0000;
+      color: #fff;
+      cursor: pointer;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin - Ambulance Bookings</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Location</th>
+        <th>Details</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <script>
+    const statuses = ["Pending", "Cancelled", "Rebooked", "Dispatched"];
+
+    async function load() {
+      const res = await fetch("/api/bookings");
+      const data = await res.json();
+      const tbody = document.getElementById("rows");
+      tbody.innerHTML = "";
+
+      for (const b of data) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${b.id}</td>
+          <td>${b.name}</td>
+          <td>${b.phone}</td>
+          <td>${b.email || ""}</td>
+          <td>${b.location}</td>
+          <td>${b.details || ""}</td>
+          <td>${b.status}</td>
+          <td>${new Date(b.created_at).toLocaleString()}</td>
+          <td>
+            <select data-id="${b.id}">
+              ${statuses.map(s => `<option ${s === b.status ? "selected" : ""}>${s}</option>`).join("")}
+            </select>
+            <button data-id="${b.id}">Update</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      document.querySelectorAll("button[data-id]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          const select = document.querySelector(`select[data-id='${id}']`);
+          const status = select.value;
+
+          const res2 = await fetch(`/api/bookings/${id}` , {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status })
+          });
+          const data2 = await res2.json();
+          if (!res2.ok) {
+            alert(data2.error || "Update failed");
+            return;
+          }
+          load();
+        });
+      });
+    }
+
+    load();
+  </script>
+</body>
+</html>

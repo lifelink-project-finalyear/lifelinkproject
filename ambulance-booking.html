@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ambulance Booking System</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffecec;
+      color: #333;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #8B0000;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      border: 2px solid #8B0000;
+      box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #8B0000;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #8B0000;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #660000;
+    }
+
+    .booking {
+      background: #fff0f0;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 5px solid #8B0000;
+      border-radius: 5px;
+    }
+
+    .cancelled {
+      background: #ffecec;
+      border-left: 5px solid red;
+    }
+
+    .rebooked {
+      background: #e9ffe9;
+      border-left: 5px solid green;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Ambulance Booking System</h1>
+
+  <div class="container">
+    <h2 style="color:#8B0000;">Book an Ambulance</h2>
+
+    <label>Patient Name:</label>
+    <input type="text" id="patientName" placeholder="Enter patient name" />
+
+    <label>Phone Number:</label>
+    <input type="tel" id="phone" placeholder="Enter phone number" />
+
+    <label>Email (optional):</label>
+    <input type="email" id="email" placeholder="Enter email for confirmation" />
+
+    <!-- LOCATION DROPDOWN -->
+    <label>Pickup Location:</label>
+    <select id="location">
+      <option value="" disabled selected>Select Location</option>
+      <option>Udupi</option>
+      <option>Manipal</option>
+      <option>Kundapura</option>
+      <option>Karkala</option>
+      <option>Brahmavar</option>
+      <option>Mangaluru</option>
+      <option>Moodbidri</option>
+    </select>
+
+    <!-- HOSPITAL DROPDOWN -->
+    <label>Hospital:</label>
+    <select id="hospital">
+      <option value="" disabled selected>Select Hospital</option>
+    </select>
+
+    <label>Predicted Disease:</label>
+    <select id="predictedDisease">
+      <option value="" disabled selected>Select predicted disease</option>
+      <option>Fever</option>
+      <option>Cold</option>
+      <option>Cough</option>
+      <option>Headache</option>
+      <option>Diarrhea</option>
+      <option>Body Pain</option>
+      <option>Chest Pain</option>
+      <option>Vomiting</option>
+      <option>Breathing difficulty</option>
+      <option>Severe Trauma</option>
+    </select>
+
+    <label>Additional Details (optional):</label>
+    <input type="text" id="details" placeholder="Any extra details" />
+
+    <button onclick="bookAmbulance()">Book Ambulance</button>
+
+    <h3 style="color:#8B0000;">Manage Booking</h3>
+    <input type="text" id="bookingId" placeholder="Enter Booking ID" />
+    <button onclick="cancelBooking()">Cancel Booking</button>
+    <button onclick="rebookAmbulance()">Rebook Ambulance</button>
+
+    <div id="bookingList">
+      <h3 style="color:#8B0000;">All Bookings</h3>
+      <p>No bookings found.</p>
+    </div>
+  </div>
+
+  <script>
+    /* LOCATION -> HOSPITAL DATA */
+    const hospitalData = {
+      Udupi: [
+        "Dr. TMA Pai Hospital - Udupi",
+        "Adarsha Hospital - Udupi",
+        "City Hospital - Udupi",
+        "District Government Hospital - Udupi"
+      ],
+      Manipal: [
+        "KMC Hospital - Manipal",
+        "Manipal Hospital",
+        "Dr. TMA Pai Hospital"
+      ],
+      Kundapura: [
+        "Government Hospital - Kundapura",
+        "Chinmayi Hospital"
+      ],
+      Karkala: [
+        "Government Hospital - Karkala",
+        "Shree Krishna Hospital"
+      ],
+      Brahmavar: [
+        "Government Hospital - Brahmavar",
+        "Sagar Hospital"
+      ],
+      Mangaluru: [
+        "Wenlock Hospital",
+        "KMC Hospital",
+        "AJ Hospital",
+        "Father Muller Hospital"
+      ],
+      Moodbidri: [
+        "Government Hospital - Moodbidri",
+        "Alva's Health Center"
+      ]
+    };
+
+    document.getElementById("location").addEventListener("change", function () {
+      const hospitalSelect = document.getElementById("hospital");
+      hospitalSelect.innerHTML = `<option disabled selected>Select Hospital</option>`;
+      hospitalData[this.value]?.forEach(h => {
+        const opt = document.createElement("option");
+        opt.textContent = h;
+        hospitalSelect.appendChild(opt);
+      });
+    });
+
+    /* BOOKING LOGIC (Server-backed) */
+    async function loadBookings() {
+      try {
+        const res = await fetch("/api/bookings");
+        const data = await res.json();
+        displayBookings(data);
+      } catch (err) {
+        bookingList.innerHTML = "<p>Failed to load bookings.</p>";
+      }
+    }
+
+    async function bookAmbulance() {
+      const name = patientName.value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const location = document.getElementById("location").value;
+      const hospital = document.getElementById("hospital").value;
+      const disease = predictedDisease.value;
+      const extraDetails = document.getElementById("details").value.trim();
+
+      if (!name || !phone || !location || !hospital || !disease) {
+        alert("Please fill all required fields!");
+        return;
+      }
+
+      const details = [
+        `Hospital: ${hospital}`,
+        `Predicted disease: ${disease}`,
+        extraDetails ? `Notes: ${extraDetails}` : null
+      ].filter(Boolean).join(" | ");
+
+      try {
+        const res = await fetch("/api/book-ambulance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, phone, email, location, details })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Booking failed");
+
+        alert(`Booking Successful!\nBooking ID: ${data.id}`);
+        clearInputs();
+        loadBookings();
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+      }
+    }
+
+    async function cancelBooking() {
+      const id = bookingId.value.trim();
+      if (!id) return alert("Please enter a Booking ID");
+
+      try {
+        const res = await fetch(`/api/bookings/${id}` , {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Cancelled" })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Cancel failed");
+
+        alert("Booking cancelled");
+        loadBookings();
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+      }
+    }
+
+    async function rebookAmbulance() {
+      const id = bookingId.value.trim();
+      if (!id) return alert("Please enter a Booking ID");
+
+      try {
+        const res = await fetch(`/api/bookings/${id}` , {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Rebooked" })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Rebook failed");
+
+        alert("Rebooked");
+        loadBookings();
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+      }
+    }
+
+    function displayBookings(bookings) {
+      bookingList.innerHTML = "<h3 style='color:#8B0000;'>All Bookings</h3>";
+
+      if (!bookings || bookings.length === 0) {
+        bookingList.innerHTML += "<p>No bookings found.</p>";
+        return;
+      }
+
+      for (const b of bookings) {
+        let cls = "booking";
+        if (b.status === "Cancelled") cls += " cancelled";
+        if (b.status === "Rebooked") cls += " rebooked";
+
+        bookingList.innerHTML += `
+          <div class="${cls}">
+            <strong>Booking ID:</strong> ${b.id}<br>
+            <strong>Patient:</strong> ${b.name}<br>
+            <strong>Phone:</strong> ${b.phone}<br>
+            <strong>Email:</strong> ${b.email || "None"}<br>
+            <strong>Location:</strong> ${b.location}<br>
+            <strong>Details:</strong> ${b.details || "None"}<br>
+            <strong>Status:</strong> ${b.status}<br>
+            <small>${new Date(b.created_at).toLocaleString()}</small>
+          </div>`;
+      }
+    }
+
+    function clearInputs() {
+      patientName.value = "";
+      phone.value = "";
+      email.value = "";
+      location.selectedIndex = 0;
+      hospital.innerHTML = `<option disabled selected>Select Hospital</option>`;
+      predictedDisease.selectedIndex = 0;
+      details.value = "";
+      bookingId.value = "";
+    }
+
+    // Initial load
+    loadBookings();
+  </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Life Link | Symptoms Checker</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #8b0000, #b22222);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: white;
+    }
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      color: #8b0000;
+      font-weight: bold;
+    }
+
+    .nav a {
+      text-decoration: none;
+      margin-left: 15px;
+      color: #8b0000;
+      font-weight: bold;
+    }
+
+    /* MAIN SECTION */
+    .symptoms-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .sym-left {
+      background: rgba(255,255,255,0.15);
+      padding: 25px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 700px;
+      color: white;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      outline: none;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: #8b0000;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    .btn-primary:hover {
+      background: #5a0000;
+    }
+
+    .book-ambulance-btn {
+      display: inline-block;
+      background: white;
+      color: #8b0000;
+      padding: 10px 22px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    /* ICON GRID */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .icon-btn {
+      background: white;
+      border: 2px solid #8b0000;
+      border-radius: 25px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 14px;
+      color: #8b0000;
+    }
+
+    .icon-btn:hover {
+      background: #8b0000;
+      color: white;
+    }
+
+    .icon-btn span {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* RESULT BOX */
+    .result-card {
+      background: white;
+      border-left: 5px solid #8b0000;
+      border-radius: 10px;
+      padding: 15px;
+      color: #8b0000;
+      margin-top: 20px;
+      line-height: 1.5;
+      white-space: pre-line;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="left">
+    <span>🚑</span>
+    <span>Life Link</span>
+  </div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="login.html">Logout</a>
+  </nav>
+</header>
+
+<!-- MAIN CONTENT -->
+<section class="symptoms-wrap">
+  <div class="sym-left">
+
+    <a href="ambulance-booking.html" class="book-ambulance-btn">
+      🚑 Book Ambulance
+    </a>
+
+    <h1>Describe Your Symptoms</h1>
+    <p>Enter or tap symptoms to get AI-based health prediction.</p>
+
+    <textarea
+      id="symptomText"
+      placeholder="Example: fever, headache, vomiting, cough">
+    </textarea>
+
+    <p style="color: #ffd27d; font-size: 14px;">
+      ⚠️ This AI prediction is not medical advice. Please consult a doctor.
+    </p>
+
+    <button class="btn-primary" onclick="analyzeSymptoms()">
+      Submit
+    </button>
+
+    <h3 style="margin-top: 25px;">Tap Symptoms Icons</h3>
+
+    <!-- ICONS -->
+    <div class="icon-grid">
+      <div class="icon-btn" onclick="addSymptom('Fever')">
+        <span>🤒</span>Fever
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Cold and Sneezing')">
+        <span>🤧</span>Cold
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Cough')">
+        <span>😷</span>Cough
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Headache')">
+        <span>🤕</span>Headache
+      </div>
+
+      <div class="icon-btn" onclick="addSymptom('Diarrhea')">
+        <span>🚽</span>Diarrhea
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Body Pain')">
+        <span>💢</span>Body Pain
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Chest Pain')">
+        <span>❤️</span>Chest Pain
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Vomiting')">
+        <span>🤢</span>Vomiting
+      </div>
+
+      <div class="icon-btn" onclick="addSymptom('Loss of taste or smell')">
+        <span>🦠</span>COVID-19
+      </div>
+      <div class="icon-btn" onclick="addSymptom('Breathing difficulty')">
+        <span>😮‍💨</span>Breathing
+      </div>
+      <div class="icon-btn" onclick="addSymptom('High fever')">
+        <span>🌡️</span>High Fever
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" class="result-card"></div>
+
+  </div>
+</section>
+
+<!-- CONNECT JS -->
+<script src="predict.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+/* ===== Global Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #111;
+  color: #fff;
+  line-height: 1.6;
+}
+
+/* ===== Header ===== */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #8b0000; /* Dark red */
+  padding: 15px 50px;
+  color: white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+}
+
+.site-header .brand {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.site-header .nav a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.site-header .nav a:hover {
+  color: #ff7b7b;
+}
+
+.btn {
+  background: linear-gradient(90deg, #ff4b4b, #d40000);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-out {
+  border: 2px solid white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-out:hover {
+  background: white;
+  color: #8b0000;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 80px;
+  flex-wrap: wrap;
+}
+
+.hero-left {
+  flex: 1;
+  max-width: 600px;
+}
+
+.hero-left h1 {
+  font-size: 3rem;
+  color: #ff4b4b;
+}
+
+.hero-left h2 {
+  font-size: 1.4rem;
+  margin-top: 10px;
+  color: #ffd7d7;
+}
+
+.hero-left .lead {
+  margin: 20px 0;
+  color: #f2f2f2;
+  font-size: 1.1rem;
+}
+
+
+/* ===== Buttons ===== */
+.btn-primary {
+  display: inline-block;
+  background: linear-gradient(90deg, #ff4b4b, #d40000);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #ff7b7b, #ff1a1a);
+  transform: scale(1.05);
+}
+
+.big {
+  font-size: 1.1rem;
+}
+
+.phone-btn {
+  display: inline-block;
+  margin-top: 5px;
+  color: #fff;
+  font-size: 1.2rem;
+  text-decoration: none;
+  background: #8b0000;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.hero-actions {
+  margin-top: 25px;
+}
+
+.or {
+  margin: 15px 0;
+  font-weight: bold;
+  color: #ccc;
+}
+
+.call {
+  color: #ffbcbc;
+  margin-bottom: 6px;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  background: #1a1a1a;
+  text-align: center;
+  padding: 15px;
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-top: 50px;
+}
+
+/* ===== Auth Pages (Login / Register / Forgot) ===== */
+.auth-page {
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+.auth-left {
+  flex: 1;
+  background: #8b0000;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.auth-left h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.auth-card {
+  flex: 1;
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.auth-card h2 {
+  margin-bottom: 20px;
+  color: #ff4b4b;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 350px;
+}
+
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+  background: #333;
+  border: none;
+  color: white;
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.auth-card input:focus,
+.auth-card select:focus {
+  outline: 2px solid #ff4b4b;
+}
+
+.auth-card .small {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.auth-card a {
+  color: #ff4b4b;
+  text-decoration: none;
+}
+
+/* ===== Symptoms Page ===== */
+.symptoms-wrap {
+  display: flex;
+  justify-content: space-between;
+  padding: 60px 80px;
+  flex-wrap: wrap;
+}
+
+.sym-left {
+  flex: 1;
+  max-width: 500px;
+}
+
+.sym-left textarea {
+  width: 100%;
+  height: 120px;
+  background: #222;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.common-sym {
+  margin-top: 20px;
+}
+
+.common-sym h3 {
+  margin-bottom: 10px;
+  color: #ff4b4b;
+}
+
+.sym-buttons button {
+  background: #8b0000;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.sym-buttons button:hover {
+  background: #ff4b4b;
+}
+
+.sym-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.result-card {
+  background: #1f1f1f;
+  border-left: 5px solid #ff4b4b;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+  .auth-page {
+    flex-direction: column;
+    height: auto;
+  }
+  .symptoms-wrap {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero-right img {
+    margin-top: 40px;
+  }
+}
+.emergency-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width:200px;
+      padding:15px;
+      background:#ff0000; /* Bright red SOS button */
+      border:none;
+      border-radius:30px;
+      color:#fff;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      z-index:9999;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .emergency-btn:hover {
+      transform:translateY(-2px);
+      background:#cc0000;
+    }
